@@ -1,0 +1,98 @@
+{
+    "common": {
+        "STAT": "CHNODE",
+        "CHILD": {
+            "follow": {
+                "STAT": "ADD",
+                "VAL": false
+            },
+            "setting1": {
+                "STAT": "NOTCH",
+                "VAL": "Value 1"
+            },
+            "setting2": {
+                "STAT": "REMOVE",
+                "VAL": 200
+            },
+            "setting3": {
+                "STAT": "CHANGE",
+                "VAL_REM": true,
+                "VAL_ADD": null
+            },
+            "setting4": {
+                "STAT": "ADD",
+                "VAL": "blah blah"
+            },
+            "setting5": {
+                "STAT": "ADD",
+                "VAL": {
+                    "key5": "value5"
+                }
+            },
+            "setting6": {
+                "STAT": "CHNODE",
+                "CHILD": {
+                    "doge": {
+                        "STAT": "CHNODE",
+                        "CHILD": {
+                            "wow": {
+                                "STAT": "CHANGE",
+                                "VAL_REM": "",
+                                "VAL_ADD": "so much"
+                            }
+                        }
+                    },
+                    "key": {
+                        "STAT": "NOTCH",
+                        "VAL": "value"
+                    },
+                    "ops": {
+                        "STAT": "ADD",
+                        "VAL": "vops"
+                    }
+                }
+            }
+        }
+    },
+    "group1": {
+        "STAT": "CHNODE",
+        "CHILD": {
+            "baz": {
+                "STAT": "CHANGE",
+                "VAL_REM": "bas",
+                "VAL_ADD": "bars"
+            },
+            "foo": {
+                "STAT": "NOTCH",
+                "VAL": "bar"
+            },
+            "nest": {
+                "STAT": "CHANGE",
+                "VAL_REM": {
+                    "key": "value"
+                },
+                "VAL_ADD": "str"
+            }
+        }
+    },
+    "group2": {
+        "STAT": "REMOVE",
+        "VAL": {
+            "abc": 12345,
+            "deep": {
+                "id": 45
+            }
+        }
+    },
+    "group3": {
+        "STAT": "ADD",
+        "VAL": {
+            "deep": {
+                "id": {
+                    "number": 45
+                }
+            },
+            "fee": 100500
+        }
+    }
+}

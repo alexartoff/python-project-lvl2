@@ -1,0 +1,36 @@
+install:
+	poetry install
+
+force-inst:
+	python3 -m pip install --force-reinstall
+
+gendiff:
+	poetry run gendiff
+
+build:
+	poetry build
+
+publish:
+	poetry publish --dry-run --username ' ' --password ' '
+
+package-inst:
+	python3 -m pip install --user dist/*.whl
+
+patch:
+	poetry install
+	poetry build
+	poetry publish --dry-run --username ' ' --password ' '
+
+lint:
+	poetry run flake8 gendiff
+
+test:
+	poetry run pytest -vv
+
+test-cov:
+	poetry run pytest --cov
+
+test-cov-xml:
+	poetry run pytest --cov=gendiff --cov-report xml gendiff/tests/
+
+.PHONY: install test lint selfcheck check build
