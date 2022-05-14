@@ -28,9 +28,12 @@ test:
 	poetry run pytest -vv
 
 test-cov:
-	poetry run pytest --cov
+	poetry run pytest --cov=gendiff
 
 test-cov-xml:
-	poetry run pytest --cov=gendiff --cov-report xml gendiff/tests/
+	poetry run pytest --cov=gendiff --cov-report xml tests/
+
+test-cov-html:
+	poetry run pytest --cov=gendiff --cov-report html tests/
 
 .PHONY: install test lint selfcheck check build

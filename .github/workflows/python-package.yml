@@ -31,4 +31,4 @@ jobs:
           CC_TEST_REPORTER_ID: b434ceaca66bbdbedebbaa62b1fb832763c1a6a5f51c6b5daea7de1d4439063b
         with:
           coverageCommand: make test-cov
-          debug: false
+          debug: true
