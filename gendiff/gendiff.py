@@ -11,7 +11,6 @@ import os
 def generate_diff(file_one, file_two, format='stylish'):
     file_one_path = get_file_path(file_one)
     file_two_path = get_file_path(file_two)
-    print(file_one_path, file_two_path)
     dict_one, dict_two = files_parser(file_one_path, file_two_path)
     diff = calc_diff(dict_one, dict_two)
     if format == 'plain':
@@ -24,7 +23,7 @@ def generate_diff(file_one, file_two, format='stylish'):
 
 
 def get_file_path(file_name):
-    return f"{os.getcwd()}/gendiff/tests/fixtures/{file_name}"
+    return f"tests/fixtures/{file_name}"
 
 
 def calc_diff(dct_one, dct_two):
