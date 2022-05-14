@@ -53,6 +53,36 @@ def file_two_tree_y():
 
 
 @pytest.fixture
+def gh_file_one_tree_j():
+    return 'gh-file1.json'
+
+
+@pytest.fixture
+def gh_file_two_tree_j():
+    return 'gh-file2.json'
+
+
+@pytest.fixture
+def gh_file_one_tree_y():
+    return 'gh-file1.yml'
+
+
+@pytest.fixture
+def gh_file_two_tree_y():
+    return 'gh-file2.yml'
+
+
+@pytest.fixture
+def gh_result_plain():
+    return open('tests/fixtures/gh-result_plain', 'r')
+
+
+@pytest.fixture
+def gh_result_stylish():
+    return open('tests/fixtures/gh-result_stylish', 'r')
+
+
+@pytest.fixture
 def result12():
     return open('tests/fixtures/result12.txt', 'r')
 
@@ -132,3 +162,21 @@ def test_gendiff_tree(
     assert generate_diff(file_one_tree_y,
                          file_two_tree_y,
                          format='json') == res12json
+
+
+def test_gendiff_gh(
+        gh_file_one_tree_j, gh_file_two_tree_j,
+        gh_file_one_tree_y, gh_file_two_tree_y,
+        gh_result_plain, gh_result_stylish):
+    res12stylish = gh_result_stylish.read()
+    res12plain = gh_result_plain.read()
+    assert generate_diff(gh_file_one_tree_j,
+                         gh_file_two_tree_j) == res12stylish
+    assert generate_diff(gh_file_one_tree_y,
+                         gh_file_two_tree_y) == res12stylish
+    assert generate_diff(gh_file_one_tree_j,
+                         gh_file_two_tree_j,
+                         format='plain') == res12plain
+    assert generate_diff(gh_file_one_tree_y,
+                         gh_file_two_tree_y,
+                         format='plain') == res12plain

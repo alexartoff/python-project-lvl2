@@ -65,6 +65,8 @@ def normalize_values(value):
             return str(value)
     if isinstance(value, dict):
         return convert_dict_to_formated_str(value)
+    elif isinstance(value, int):
+        return f'{str(value)}'
     return f'\'{str(value)}\''
 
 
