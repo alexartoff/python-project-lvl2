@@ -5,7 +5,7 @@ from gendiff.parser import files_parser
 from gendiff.formatters.stylish import make_stylish_format
 from gendiff.formatters.plain import make_plain_format
 from gendiff.formatters.json import make_json_format
-import os
+# import os
 
 
 def generate_diff(file_one, file_two, format='stylish'):
@@ -22,8 +22,12 @@ def generate_diff(file_one, file_two, format='stylish'):
     return diff_formated
 
 
-def get_file_path(file_name):
-    return f"tests/fixtures/{file_name}"
+def get_file_path(file_path):
+    if "/" in file_path:
+        file_name = file_path.split("/")[-1]
+        return f"tests/fixtures/{file_name}"
+    # print(os.listdir(os.path.realpath(".")))
+    return f"tests/fixtures/{file_path}"
 
 
 def calc_diff(dct_one, dct_two):

@@ -25,10 +25,12 @@ def main():
         '--format',
         type=str,
         default='stylish',
-        help='set format of output')
+        help='set format of output: STYLISH (as default) | PLAIN | JSON')
 
     args = parser.parse_args()
-    diff = generate_diff(args.first_file, args.second_file, args.format)
+    diff = generate_diff(args.first_file,
+                         args.second_file,
+                         (args.format).lower())
     print(diff)
 
 
