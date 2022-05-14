@@ -5,6 +5,7 @@
 | [![Maintainability](https://api.codeclimate.com/v1/badges/28a5c55358d65b95915b/maintainability)](https://codeclimate.com/github/alexartoff/python-project-lvl2/maintainability) | CodeClimate maintainability |
 | ![Linter Flake8 check](https://github.com/alexartoff/python-project-lvl2/actions/workflows/mylint.yml/badge.svg) | Linter Flake8 check |
 | [![Continuous Integration check](https://github.com/alexartoff/python-project-lvl2/actions/workflows/python-package.yml/badge.svg)](https://github.com/alexartoff/python-project-lvl2/actions/workflows/python-package.yml) | Continuous Integration check |
+| [![Test Coverage](https://api.codeclimate.com/v1/badges/28a5c55358d65b95915b/test_coverage)](https://codeclimate.com/github/alexartoff/python-project-lvl2/test_coverage) | Test coverage |
    
 ***
 ### INTRO  
