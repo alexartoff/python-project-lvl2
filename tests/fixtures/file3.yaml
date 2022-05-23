@@ -1,9 +1,0 @@
-
-students: 20000
-ban: none
-timeout: 50
-timer: 12.45
-date: 2022-04-19
-proxy: 123.234.53.22
-follow: false
-host: hexlet.io
