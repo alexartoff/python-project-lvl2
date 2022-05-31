@@ -8,10 +8,10 @@ FILEMODE = 'tree'
 def test_json(file1_tree_json_path, file2_tree_json_path, result_render):
     assert result_render == generate_diff(file1_tree_json_path,
                                           file2_tree_json_path,
-                                          format=FORMATTER)
+                                          selected_format=FORMATTER)
 
 
 def test_yml(file1_tree_yml_path, file2_tree_yml_path, result_render):
     assert result_render == generate_diff(file1_tree_yml_path,
                                           file2_tree_yml_path,
-                                          format=FORMATTER)
+                                          selected_format=FORMATTER)

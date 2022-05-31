@@ -1,76 +1,29 @@
 #!/usr/bin/env python
 
 
-from gendiff.parser import files_parser
-from gendiff.formatters.stylish import make_stylish_format
-from gendiff.formatters.plain import make_plain_format
-from gendiff.formatters.json import make_json_format
-# import os
+from gendiff.parser import parse
+from gendiff.tree import calc_diff
+from gendiff.formatter import format
+import os
 
 
-def generate_diff(file_one, file_two, format='stylish'):
-    file_one_path = get_file_path(file_one)
-    file_two_path = get_file_path(file_two)
-    dict_one, dict_two = files_parser(file_one_path, file_two_path)
-    diff = calc_diff(dict_one, dict_two)
-    if format == 'plain':
-        diff_formated = make_plain_format(diff)
-    elif format == 'json':
-        diff_formated = make_json_format(diff)
-    else:
-        diff_formated = make_stylish_format(diff)
-    return diff_formated
+def generate_diff(file_one, file_two, selected_format='stylish'):
+    if is_allowed_type(file_one, file_two):
+        with open(file_one, 'r') as data:
+            dict_one = parse(data, get_file_type(file_one))
+        with open(file_two, 'r') as data:
+            dict_two = parse(data, get_file_type(file_two))
+        diff = calc_diff(dict_one, dict_two)
+        return format(diff, selected_format)
+    return "Not allowed file type! use: 'json' | 'yml' | 'yaml'"
 
 
-def get_file_path(file_path):
-    if "/" in file_path:
-        file_name = file_path.split("/")[-1]
-        return f"tests/fixtures/{file_name}"
-    # print(os.listdir(os.path.realpath(".")))
-    return f"tests/fixtures/{file_path}"
+def get_file_type(file_path):
+    return str(os.path.split(file_path)[1]).split('.')[-1]
 
 
-def calc_diff(dct_one, dct_two):
-    res_dict = {}
-    keys_list = make_sorted_list_from_sets(dct_one, dct_two)
-    for key in keys_list:
-        res_dict[key] = get_status_and_value_by_key(dct_one, dct_two, key)
-    # print(f'{"*"*40}\n', res_dict, f'\n{"*"*40}')
-    return res_dict
-
-
-def make_sorted_list_from_sets(dct_one, dct_two):
-    set_one = set(dct_one.keys())
-    set_two = set(dct_two.keys())
-    return sorted(set_one.union(set_two))
-
-
-def get_status_and_value_by_key(dct_one, dct_two, key):
-    if isinstance(dct_one.get(key), dict) and (
-        isinstance(dct_two.get(key), dict)
-    ):
-        # item is child node
-        return {'STAT': 'CHNODE',
-                'CHILD': calc_diff(dct_one[key], dct_two[key])
-                }
-    elif dct_one.get(key) == dct_two.get(key):
-        # item not changed
-        return {'STAT': 'NOTCH',
-                'VAL': dct_one[key]
-                }
-    elif key in dct_one.keys() and key not in dct_two.keys():
-        # item removed
-        return {'STAT': 'REMOVE',
-                'VAL': dct_one[key]
-                }
-    elif key not in dct_one.keys() and key in dct_two.keys():
-        # item added
-        return {'STAT': 'ADD',
-                'VAL': dct_two[key]
-                }
-    else:
-        # item changed
-        return {'STAT': 'CHANGE',
-                'VAL_REM': dct_one[key],
-                'VAL_ADD': dct_two[key]
-                }
+def is_allowed_type(file_one, file_two):
+    allowed_types = ["json", "yml", "yaml"]
+    type_one, type_two = get_file_type(file_one), get_file_type(file_two)
+    if type_one in allowed_types and type_two in allowed_types:
+        return True
