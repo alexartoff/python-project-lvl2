@@ -1,35 +1,33 @@
-def make_plain_format(dct):
-    output_list = []
+def make_plain_format(tree):
     depth = 0
-    for key in dct.keys():
-        parent = key
-        inner_dict = dct[key]
-        begin_str = ''
-        if inner_dict["STAT"] != "CHNODE":
-            begin_str = f'Property \'{parent}'
+    output_list = []
+
+    for child in tree['children']:
+        if "children" in child.keys():
+            begin_str = ''
+        else:
+            begin_str = f'Property \'{child["key"]}'
         inlist = (f'{begin_str}'
-                  f'{make_formated_string(dct[key], depth, key, parent)}')
+                  f'{make_formated_string(child, depth, child["key"])}')
         output_list.append(inlist)
     return '\n'.join(output_list)
 
 
-def make_formated_string(node, depth, key, parent):
+def make_formated_string(node, depth, key):
     accum_list = []
-    keys = parent
+    child_keys = key
 
-    if node['STAT'] == 'CHNODE':
-        for key, val in node['CHILD'].items():
+    if node['type'] == 'child_node':
+        for child in node['children']:
             begin_str = ''
-            if val['STAT'] == 'CHNODE':
-                keys += f'.{key}'
-                # print(f'{"    "*depth}CHL {parent} {keys} {depth}')
-            elif val['STAT'] in ['CHANGE', 'ADD', 'REMOVE']:
-                begin_str = f'Property \'{parent}.{key}'
-                # print(f'{"    "*depth}VAL {parent} {key} {depth} {val}')
+            if child['type'] == 'child_node':
+                child_keys += f'.{child["key"]}'
+            elif child['type'] in ['changed', 'added', 'removed']:
+                begin_str = f'Property \'{key}.{child["key"]}'
             else:
                 continue
             inlist = (f'{begin_str}'
-                      f'{make_formated_string(val, depth + 1, key, keys)}')
+                      f'{make_formated_string(child, depth + 1, child_keys)}')
             accum_list.append(inlist)
     else:
         accum_list.append(make_suffix_string(node))
@@ -37,24 +35,23 @@ def make_formated_string(node, depth, key, parent):
 
 
 def make_suffix_string(node):
-    node_status = node['STAT']
-    suffix_dict = {'ADD': '\' was added with value: ',
-                   'REMOVE': '\' was removed',
-                   'CHANGE': '\' was updated. '
+    node_status = node['type']
+    suffix_dict = {'added': '\' was added with value: ',
+                   'removed': '\' was removed',
+                   'changed': '\' was updated. '
                    }
-    if node_status == 'CHANGE':
-        value_rem = node['VAL_REM']
-        value_add = node['VAL_ADD']
-        inlist = (f'{suffix_dict[node_status]}'
-                  f'From {normalize_values(value_rem)} '
-                  f'to {normalize_values(value_add)}')
-    elif node_status == 'ADD':
-        node_value = node['VAL']
-        inlist = (f'{suffix_dict[node_status]}'
-                  f'{normalize_values(node_value)}')
-    elif node_status == 'REMOVE':
-        inlist = suffix_dict[node_status]
-    return inlist
+    if node_status == 'changed':
+        value_rem = node['value_rem']
+        value_add = node['value_add']
+        return (f'{suffix_dict[node_status]}'
+                f'From {normalize_values(value_rem)} '
+                f'to {normalize_values(value_add)}')
+    if node_status == 'added':
+        node_value = node['value']
+        return (f'{suffix_dict[node_status]}'
+                f'{normalize_values(node_value)}')
+    if node_status == 'removed':
+        return suffix_dict[node_status]
 
 
 def normalize_values(value):

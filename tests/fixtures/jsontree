@@ -1,98 +1,119 @@
 {
-    "common": {
-        "STAT": "CHNODE",
-        "CHILD": {
-            "follow": {
-                "STAT": "ADD",
-                "VAL": false
-            },
-            "setting1": {
-                "STAT": "NOTCH",
-                "VAL": "Value 1"
-            },
-            "setting2": {
-                "STAT": "REMOVE",
-                "VAL": 200
-            },
-            "setting3": {
-                "STAT": "CHANGE",
-                "VAL_REM": true,
-                "VAL_ADD": null
-            },
-            "setting4": {
-                "STAT": "ADD",
-                "VAL": "blah blah"
-            },
-            "setting5": {
-                "STAT": "ADD",
-                "VAL": {
-                    "key5": "value5"
-                }
-            },
-            "setting6": {
-                "STAT": "CHNODE",
-                "CHILD": {
-                    "doge": {
-                        "STAT": "CHNODE",
-                        "CHILD": {
-                            "wow": {
-                                "STAT": "CHANGE",
-                                "VAL_REM": "",
-                                "VAL_ADD": "so much"
-                            }
-                        }
-                    },
-                    "key": {
-                        "STAT": "NOTCH",
-                        "VAL": "value"
-                    },
-                    "ops": {
-                        "STAT": "ADD",
-                        "VAL": "vops"
-                    }
-                }
-            }
-        }
-    },
-    "group1": {
-        "STAT": "CHNODE",
-        "CHILD": {
-            "baz": {
-                "STAT": "CHANGE",
-                "VAL_REM": "bas",
-                "VAL_ADD": "bars"
-            },
-            "foo": {
-                "STAT": "NOTCH",
-                "VAL": "bar"
-            },
-            "nest": {
-                "STAT": "CHANGE",
-                "VAL_REM": {
-                    "key": "value"
+    "type": "root_node",
+    "children": [
+        {
+            "key": "common",
+            "type": "child_node",
+            "children": [
+                {
+                    "key": "follow",
+                    "type": "added",
+                    "value": false
                 },
-                "VAL_ADD": "str"
-            }
-        }
-    },
-    "group2": {
-        "STAT": "REMOVE",
-        "VAL": {
-            "abc": 12345,
-            "deep": {
-                "id": 45
-            }
-        }
-    },
-    "group3": {
-        "STAT": "ADD",
-        "VAL": {
-            "deep": {
-                "id": {
-                    "number": 45
+                {
+                    "key": "setting1",
+                    "type": "not_changed",
+                    "value": "Value 1"
+                },
+                {
+                    "key": "setting2",
+                    "type": "removed",
+                    "value": 200
+                },
+                {
+                    "key": "setting3",
+                    "type": "changed",
+                    "value_rem": true,
+                    "value_add": null
+                },
+                {
+                    "key": "setting4",
+                    "type": "added",
+                    "value": "blah blah"
+                },
+                {
+                    "key": "setting5",
+                    "type": "added",
+                    "value": {
+                        "key5": "value5"
+                    }
+                },
+                {
+                    "key": "setting6",
+                    "type": "child_node",
+                    "children": [
+                        {
+                            "key": "doge",
+                            "type": "child_node",
+                            "children": [
+                                {
+                                    "key": "wow",
+                                    "type": "changed",
+                                    "value_rem": "",
+                                    "value_add": "so much"
+                                }
+                            ]
+                        },
+                        {
+                            "key": "key",
+                            "type": "not_changed",
+                            "value": "value"
+                        },
+                        {
+                            "key": "ops",
+                            "type": "added",
+                            "value": "vops"
+                        }
+                    ]
                 }
-            },
-            "fee": 100500
+            ]
+        },
+        {
+            "key": "group1",
+            "type": "child_node",
+            "children": [
+                {
+                    "key": "baz",
+                    "type": "changed",
+                    "value_rem": "bas",
+                    "value_add": "bars"
+                },
+                {
+                    "key": "foo",
+                    "type": "not_changed",
+                    "value": "bar"
+                },
+                {
+                    "key": "nest",
+                    "type": "changed",
+                    "value_rem": {
+                        "key": "value"
+                    },
+                    "value_add": "str"
+                }
+            ]
+        },
+        {
+            "key": "group2",
+            "type": "removed",
+            "value": {
+                "abc": 12345,
+                "deep": {
+                    "id": 45
+                }
+            }
+        },
+        {
+            "key": "group3",
+            "type": "added",
+            "value": {
+                "deep": {
+                    "id": {
+                        "number": 45
+                    }
+                },
+                "fee": 100500
+            }
         }
-    }
+    ]
 }

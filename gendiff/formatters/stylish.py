@@ -2,31 +2,35 @@ OPEN_BRACKET = '{'
 CLOSE_BRACKET = '}'
 OFFSET = '    '
 OFFSET_ADD = '  + '
-OFFSET_REMOVE = '  - '
+OFFSET_REM = '  - '
 
 
-def make_stylish_format(dct):
-    output_list = [OPEN_BRACKET]
+def make_stylish_format(tree):
+    output_list = []
     depth = 0
-    for key in dct.keys():
-        output_list.append(make_formated_string(dct[key], depth, key))
+    for key in tree.keys():
+        if tree[key] == 'root_node':
+            output_list.append(OPEN_BRACKET)
+        if key == 'children':
+            for child in tree['children']:
+                output_list.append(make_f_string(child, depth, child['key']))
     output_list.append(CLOSE_BRACKET)
     return '\n'.join(output_list)
 
 
-def make_formated_string(node, depth, key):
+def make_f_string(node, depth, key):
     accum_list = []
-    if node['STAT'] == 'CHNODE':
+    if node['type'] == 'child_node':
         accum_list.append(f'{OFFSET*(depth + 1)}{key}: {OPEN_BRACKET}')
-        for key, val in node['CHILD'].items():
-            accum_list.append(make_formated_string(val, depth + 1, key))
+        for child in node['children']:
+            accum_list.append(make_f_string(child, depth + 1, child['key']))
         accum_list.append(f'{OFFSET*(depth + 1)}{CLOSE_BRACKET}')
-    elif node['STAT'] in ['NOTCH', 'ADD', 'REMOVE']:
+    elif node['type'] in ['not_changed', 'added', 'removed']:
         accum_list.append(make_string_for_list(node, depth, key))
-    elif node['STAT'] == 'CHANGE':
-        value_rem = node['VAL_REM']
-        value_add = node['VAL_ADD']
-        inlist = (f'{OFFSET*depth}{OFFSET_REMOVE}{key}: '
+    elif node['type'] == 'changed':
+        value_rem = node['value_rem']
+        value_add = node['value_add']
+        inlist = (f'{OFFSET*depth}{OFFSET_REM}{key}: '
                   f'{normalize_values(value_rem, depth)}\n'
                   f'{OFFSET*depth}{OFFSET_ADD}{key}: '
                   f'{normalize_values(value_add, depth)}')
@@ -35,12 +39,15 @@ def make_formated_string(node, depth, key):
 
 
 def make_string_for_list(node, depth, key):
-    status = node['STAT']
-    value = node['VAL']
-    offset = "" if status == 'NOTCH' else globals()[f"OFFSET_{status}"]
-    depth_value = (depth + 1) if status == 'NOTCH' else depth
+    node_status = {'added': 'ADD', 'removed': 'REM'}
+    if node['type'] == 'not_changed':
+        offset = ""
+        depth_value = depth + 1
+    else:
+        offset = globals()[f"OFFSET_{node_status[node['type']]}"]
+        depth_value = depth
     inlist = (f'{OFFSET*depth_value}{offset}{key}: '
-              f'{normalize_values(value, depth)}')
+              f'{normalize_values(node["value"], depth)}')
     return inlist
 
 
