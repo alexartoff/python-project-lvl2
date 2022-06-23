@@ -47,6 +47,9 @@ def to_str(data, depth):
             return 'true'
         return 'false'
 
+    if isinstance(data, int):
+        return str(data)
+
     if data is None:
         return 'null'
 
