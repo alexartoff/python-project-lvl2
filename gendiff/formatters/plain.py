@@ -1,74 +1,46 @@
 def make_plain_format(tree):
-    depth = 0
-    output_list = []
-
-    for child in tree['children']:
-        if "children" in child.keys():
-            begin_str = ''
-        else:
-            begin_str = f'Property \'{child["key"]}'
-        inlist = (f'{begin_str}'
-                  f'{make_formated_string(child, depth, child["key"])}')
-        output_list.append(inlist)
-    return '\n'.join(output_list)
+    return iter_(tree)
 
 
-def make_formated_string(node, depth, key):
-    accum_list = []
-    child_keys = key
+def iter_(node, key_depth=""):
+    children = node.get('children')
+    keys_chain = key_depth + str(node.get("key"))
+    formatted_value = to_str(node.get('value'))
+    formatted_value_add = to_str(node.get('value_add'))
+    formatted_value_rem = to_str(node.get('value_rem'))
+
+    if node['type'] == 'root_node':
+        lines = map(lambda child: iter_(child, key_depth), children)
+        result = ''.join(lines)
+        return f'{result[1:]}'
 
     if node['type'] == 'child_node':
-        for child in node['children']:
-            begin_str = ''
-            if child['type'] == 'child_node':
-                child_keys += f'.{child["key"]}'
-            elif child['type'] in ['changed', 'added', 'removed']:
-                begin_str = f'Property \'{key}.{child["key"]}'
-            else:
-                continue
-            inlist = (f'{begin_str}'
-                      f'{make_formated_string(child, depth + 1, child_keys)}')
-            accum_list.append(inlist)
-    else:
-        accum_list.append(make_suffix_string(node))
-    return '\n'.join(accum_list)
+        lines = map(lambda child: iter_(child, f"{keys_chain}."), children)
+        result = ''.join(filter(bool, lines))
+        return f'{result}'
+
+    if node['type'] == 'added':
+        return (f'\nProperty \'{keys_chain}\' '
+                f'was added with value: {formatted_value}')
+
+    if node['type'] == 'removed':
+        return f'\nProperty \'{keys_chain}\' was removed'
+
+    if node['type'] == 'changed':
+        return (f'\nProperty \'{keys_chain}\' was updated. '
+                f'From {formatted_value_rem} to {formatted_value_add}')
 
 
-def make_suffix_string(node):
-    node_status = node['type']
-    suffix_dict = {'added': '\' was added with value: ',
-                   'removed': '\' was removed',
-                   'changed': '\' was updated. '
-                   }
-    if node_status == 'changed':
-        value_rem = node['value_rem']
-        value_add = node['value_add']
-        return (f'{suffix_dict[node_status]}'
-                f'From {normalize_values(value_rem)} '
-                f'to {normalize_values(value_add)}')
-    if node_status == 'added':
-        node_value = node['value']
-        return (f'{suffix_dict[node_status]}'
-                f'{normalize_values(node_value)}')
-    if node_status == 'removed':
-        return suffix_dict[node_status]
+def to_str(data):
+    if isinstance(data, dict):
+        return '[complex value]'
 
+    if isinstance(data, bool):
+        if data:
+            return 'true'
+        return 'false'
 
-def normalize_values(value):
-    norm = {'True': 'true', 'False': 'false', 'None': 'null'}
-    for key, norm_val in norm.items():
-        if str(value) == key:
-            value = norm_val
-            return str(value)
-    if isinstance(value, dict):
-        return convert_dict_to_formated_str(value)
-    elif isinstance(value, int):
-        return f'{str(value)}'
-    return f'\'{str(value)}\''
+    if data is None:
+        return 'null'
 
-
-def convert_dict_to_formated_str(dct):
-    accum_list = []
-    if isinstance(dct, dict):
-        accum_list.append('[complex value]')
-    return '\n'.join(accum_list)
+    return f"'{str(data)}'"

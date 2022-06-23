@@ -7,9 +7,8 @@ def calc_diff(data_one, data_two):
     sorted_keys_list = sorted(keys)
 
     for key in sorted_keys_list:
-        if isinstance(data_one.get(key), dict) and (
-            isinstance(data_two.get(key), dict)
-        ):
+        if isinstance(data_one.get(key), dict) and \
+           isinstance(data_two.get(key), dict):
             result.append({
                 'key': key,
                 'type': 'child_node',
